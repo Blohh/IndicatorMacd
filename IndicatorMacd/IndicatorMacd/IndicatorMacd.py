@@ -21,8 +21,8 @@ class MACD:
     signal=[]
     def __init__(self, course, date):
         self.calculateMACD(course)
-        #calculateSIGNAL(course)
-        print(self.macd)
+        self.calculateSIGNAL()
+        print(self.signal)
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -41,6 +41,9 @@ class MACD:
                 denominator+=tmp
                 tmp*=tmp
             return (counter/denominator)
+    def calculateSIGNAL(self):
+        for i in range(35, len(self.macd)):
+            self.signal.append(self.calculateEMA(self.macd, i, 9))
 
     
 
