@@ -1,4 +1,6 @@
 data
+.vs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,7 +10,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-.sln
+*.sln
 .Python
 build/
 develop-eggs/
