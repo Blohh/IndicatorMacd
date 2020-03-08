@@ -11,7 +11,7 @@
     <OutputPath>.</OutputPath>
     <Name>IndicatorMacd</Name>
     <RootNamespace>IndicatorMacd</RootNamespace>
-    <InterpreterId>CondaEnv|CondaEnv|env</InterpreterId>
+    <InterpreterId>CondaEnv|CondaEnv|env2</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -25,7 +25,7 @@
     <Compile Include="IndicatorMacd.py" />
   </ItemGroup>
   <ItemGroup>
-    <InterpreterReference Include="CondaEnv|CondaEnv|env" />
+    <InterpreterReference Include="CondaEnv|CondaEnv|env2" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

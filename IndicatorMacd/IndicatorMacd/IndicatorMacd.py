@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+import jupyter
+import matplotlib.pyplot as plt
 
 class Currency:
     name = ""
@@ -22,7 +24,7 @@ class MACD:
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
-        print(self.signal)
+        self.showMACDDiagram()
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -44,6 +46,14 @@ class MACD:
     def calculateSIGNAL(self):
         for i in range(35, len(self.macd)):
             self.signal.append(self.calculateEMA(self.macd, i, 9))
+    def showMACDDiagram(self):
+        plt.plot(date[35::], self.macd[35::], label="macd", color="blue")
+        plt.plot(date[35::], self.signal, label="signal", color="red")
+        plt.legend()
+        plt.grid(True)
+        plt.xlabel("Date")
+        plt.title("MACD")
+        plt.show()
 
     
 
@@ -57,3 +67,4 @@ if __name__ == '__main__':
     currency = Currency("jen_japonski")
     date, course=currency.createData()
     macd=MACD(course, date)
+    
