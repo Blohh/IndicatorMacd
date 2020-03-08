@@ -20,20 +20,37 @@ class MACD:
     macd=[]
     signal=[]
     def __init__(self, course, date):
-        calculateMACD(course)
-        calculateSIGNAL(course)
-    def calculateMACD(course):
+        self.calculateMACD(course)
+        #calculateSIGNAL(course)
+        print(self.macd)
+    def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
-                ema12=calculateEMA(course, i, 12)
-                ema26=calculateEMA(course, i, 26)
-                macd.append(ema12-ema26)
+                ema12=self.calculateEMA(course, i, 12)
+                ema26=self.calculateEMA(course, i, 26)
+                self.macd.append(ema12-ema26)
             else:
-                macd.append(0.0)
+                self.macd.append(0.0)
+    def calculateEMA(self, course, x0, N):
+            alpha=2/(N+1)
+            counter=course[x0]
+            denominator=1
+            tmp=1-alpha
+            for i in range(x0, x0-N-1, -1):
+                counter+=course[i]*tmp
+                denominator+=tmp
+                tmp*=tmp
+            return (counter/denominator)
+
+    
+
+    
+    
+    
 
 
 
 if __name__ == '__main__':
     currency = Currency("jen_japonski")
     date, course=currency.createData()
-    
+    macd=MACD(course, date)
