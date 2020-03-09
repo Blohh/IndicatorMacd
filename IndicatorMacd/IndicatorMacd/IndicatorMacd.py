@@ -17,19 +17,23 @@ class Currency:
         course=data["Course"]
         date=data["Date"]
         return date, course
-    def showCurrencyDiagram(self):
+    def createCurrencyDiagram(self):
+        plt.figure(1)
         plt.plot(date[35::], course[35::], label="course", color="green")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.ylabel("Course")
         plt.title(self.name+" course")
+    def showCurrencyDiagram(self):
+        self.createCurrencyDiagram()
         plt.show()
 
 
 class MACD:
     macd=[]
     signal=[]
+    buy_sell_signal=[]
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
@@ -54,7 +58,18 @@ class MACD:
     def calculateSIGNAL(self):
         for i in range(35, len(self.macd)):
             self.signal.append(self.calculateEMA(self.macd, i, 9))
+    def calculateBuySellSignals(self):
+        tmp_macd=self.macd[35::]
+        for i in range(1, len(tmp_macd)):
+            if tmp_macd[i-1]<self.signal[i-1] and tmp_macd[i] > self.signal[i]:
+                self.buy_sell_signal.append("buy")
+            elif tmp_macd[i-1]>self.signal[i-1] and tmp_macd[i] < self.signal[i]:
+                self.buy_sell_signal.append("sell")
+            else:
+                self.buy_sell_signal.append("noaction")
+
     def showMACDDiagram(self):
+        plt.figure(2)
         plt.plot(date[35::], self.macd[35::], label="macd", color="blue")
         plt.plot(date[35::], self.signal, label="signal", color="red")
         plt.legend()
@@ -75,6 +90,6 @@ if __name__ == '__main__':
     currency = Currency("jen_japonski")
     date, course=currency.createData()
     macd=MACD(course, date)
-    currency.showCurrencyDiagram()
+    currency.createCurrencyDiagram()
     macd.showMACDDiagram()
     
