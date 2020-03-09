@@ -75,26 +75,32 @@ class MACD:
     
 class Diagram:
     def prepareMACDDiagram(self, date, macd, signal):
+        ticks=date[200:1000:200]
         plt.plot(date[35::], macd[35::], label="macd", color="blue")
         plt.plot(date[35::], signal, label="signal", color="red")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.title("MACD")
+        plt.xticks(ticks)
     def prepareCurrencyDiagram(self, date, currency, name):
+        ticks=date[200:1000:200]
         plt.plot(date[35::], course[35::], label="course", color="green")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.ylabel("Course")
         plt.title(name+" course")
+        plt.xticks(ticks)
     def prepareBuySellDiagram(self, date, buy_sell_signal ):
+        ticks=date[200:1000:200]
         plt.plot(date[35:999], self.buy_sell_signal, label="buy_sell_signal", color="yellow")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.ylabel("Buy-sell signals")
         plt.title("Buy-sell signals")
+        plt.xticks(ticks)
     def showMACDDiagram(self, date, macd, signal):
         plt.figure(1)
         self.prepareMACDDiagram(date, macd, signal)
