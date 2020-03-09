@@ -37,6 +37,7 @@ class MACD:
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
+        self.calculateBuySellSignals()
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -68,7 +69,7 @@ class MACD:
             else:
                 self.buy_sell_signal.append("noaction")
 
-    def showMACDDiagram(self):
+    def createMACDDiagram(self):
         plt.figure(2)
         plt.plot(date[35::], self.macd[35::], label="macd", color="blue")
         plt.plot(date[35::], self.signal, label="signal", color="red")
@@ -76,6 +77,20 @@ class MACD:
         plt.grid(True)
         plt.xlabel("Date")
         plt.title("MACD")
+    def createBuySellDiagram(self):
+        plt.figure(3)
+        plt.plot(date[35:999], self.buy_sell_signal, label="buy_sell_signal", color="yellow")
+        plt.legend()
+        plt.grid(True)
+        plt.xlabel("Date")
+        plt.ylabel("Buy-sell signals")
+        plt.title("Buy-sell signals")
+    def showMACDDiagram(self):
+        self.createMACDDiagram()
+        plt.show()
+    def showMACDDiagramWithBuySell(self):
+        self.createMACDDiagram()
+        self.createBuySellDiagram()
         plt.show()
 
     
