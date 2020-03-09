@@ -14,8 +14,10 @@ class Currency:
     def createData(self):
         filename="./data/"+str(self.name)+".csv"
         data=pd.read_csv(str(filename),delimiter=",")
-        self.course=data["Course"]
-        self.date=data["Date"]
+        self.course=list(data["Course"])
+        self.date=list(data["Date"])
+        self.course.reverse()
+        self.date.reverse()
         return self.date, self.course
     def getCourse(self):
         return self.course
