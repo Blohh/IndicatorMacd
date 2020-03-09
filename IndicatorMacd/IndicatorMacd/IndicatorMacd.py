@@ -10,24 +10,17 @@ class Currency:
     def __init__(self, name):
         self.name=name
     def getName(self):
-        return name
+        return self.name
     def createData(self):
         filename="./data/"+str(self.name)+".csv"
         data=pd.read_csv(str(filename),delimiter=",")
-        course=data["Course"]
-        date=data["Date"]
-        return date, course
-    def createCurrencyDiagram(self):
-        plt.figure(1)
-        plt.plot(date[35::], course[35::], label="course", color="green")
-        plt.legend()
-        plt.grid(True)
-        plt.xlabel("Date")
-        plt.ylabel("Course")
-        plt.title(self.name+" course")
-    def showCurrencyDiagram(self):
-        self.createCurrencyDiagram()
-        plt.show()
+        self.course=data["Course"]
+        self.date=data["Date"]
+        return self.date, self.course
+    def getCourse(self):
+        return self.course
+    def getDate(self):
+        return self.date
 
 
 class MACD:
@@ -68,33 +61,60 @@ class MACD:
                 self.buy_sell_signal.append("sell")
             else:
                 self.buy_sell_signal.append("noaction")
+    def getMACD(self):
+        return self.macd
+    def getSignal(self):
+        return self.signal
+    def getBuySellSignal(self):
+        return self.buy_sell_signal
 
-    def createMACDDiagram(self):
-        plt.figure(2)
-        plt.plot(date[35::], self.macd[35::], label="macd", color="blue")
-        plt.plot(date[35::], self.signal, label="signal", color="red")
+  
+
+    
+class Diagram:
+    def prepareMACDDiagram(self, date, macd, signal):
+        plt.plot(date[35::], macd[35::], label="macd", color="blue")
+        plt.plot(date[35::], signal, label="signal", color="red")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.title("MACD")
-    def createBuySellDiagram(self):
-        plt.figure(3)
+    def prepareCurrencyDiagram(self, date, currency, name):
+        plt.plot(date[35::], course[35::], label="course", color="green")
+        plt.legend()
+        plt.grid(True)
+        plt.xlabel("Date")
+        plt.ylabel("Course")
+        plt.title(name+" course")
+    def prepareBuySellDiagram(self, date, buy_sell_signal ):
         plt.plot(date[35:999], self.buy_sell_signal, label="buy_sell_signal", color="yellow")
         plt.legend()
         plt.grid(True)
         plt.xlabel("Date")
         plt.ylabel("Buy-sell signals")
         plt.title("Buy-sell signals")
-    def showMACDDiagram(self):
-        self.createMACDDiagram()
+    def showMACDDiagram(self, date, macd, signal):
+        plt.figure(1)
+        self.prepareMACDDiagram(date, macd, signal)
         plt.show()
-    def showMACDDiagramWithBuySell(self):
-        self.createMACDDiagram()
-        self.createBuySellDiagram()
+    def showCurrencyDiagram(self, date, currency, coursename):
+        plt.figure(1)
+        self.prepareCurrencyDiagram(date, currency, coursename)
         plt.show()
-
-    
-
+    def showMACDAndCurrency(self, date, macd, signal, currency, coursename):
+        plt.figure(1)
+        self.prepareCurrencyDiagram(date, currency, coursename)
+        plt.figure(2)
+        self.prepareMACDDiagram(date, macd, signal)
+        plt.show()
+    def showEverything(self, date, macd, signal, currency, buy_sell_signal, coursename):
+        plt.figure(1)
+        self.prepareCurrencyDiagram(date, currency, coursename)
+        plt.figure(2)
+        self.prepareMACDDiagram(date, macd, signal)
+        plt.figure(3)
+        self.prepareBuySellDiagram(date, buy_sell_signal)
+        plt.show()
     
     
     
@@ -105,6 +125,5 @@ if __name__ == '__main__':
     currency = Currency("jen_japonski")
     date, course=currency.createData()
     macd=MACD(course, date)
-    currency.createCurrencyDiagram()
-    macd.showMACDDiagram()
+    Diagram.showMACDAndCurrency(Diagram(), currency.getDate(), macd.getMACD(), macd.getSignal(), currency.getCourse(), currency.getName())
     
