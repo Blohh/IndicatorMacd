@@ -117,7 +117,23 @@ class Diagram:
         plt.show()
     
     
-    
+class Simulation:
+    def simulate(self, date, course, buy_sell_signal, starting_cash):
+        cash=starting_cash
+        deposited_cash=0
+        tmp_date=date[35::]
+        for i in range(len(buy_sell_signal)):
+            if(buy_sell_signal[i]=="buy"):
+                print("Deposited "+str(cash)+" $")
+                deposited_cash=round(cash/course[i], 2)
+                cash=0
+            elif(buy_sell_signal[i]=="sell"):
+                cash+=round(deposited_cash*course[i], 2)
+                deposited_cash=0
+                print("Got "+str(cash)+" $")
+        print("\nAt the end you have "+str(cash+round(deposited_cash*course[999], 2))+" $")
+        print("You begin with "+str(starting_cash)+" $")
+
 
 
 
@@ -126,4 +142,5 @@ if __name__ == '__main__':
     date, course=currency.createData()
     macd=MACD(course, date)
     Diagram.showMACDAndCurrency(Diagram(), currency.getDate(), macd.getMACD(), macd.getSignal(), currency.getCourse(), currency.getName())
+    Simulation.simulate(Simulation(), currency.getDate(), currency.getCourse(), macd.getBuySellSignal(), 1000)
     
