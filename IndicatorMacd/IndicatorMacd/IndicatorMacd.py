@@ -17,6 +17,15 @@ class Currency:
         course=data["Course"]
         date=data["Date"]
         return date, course
+    def showCurrencyDiagram(self):
+        plt.plot(date[35::], course[35::], label="course", color="green")
+        plt.legend()
+        plt.grid(True)
+        plt.xlabel("Date")
+        plt.ylabel("Course")
+        plt.title(self.name+" course")
+        plt.show()
+
 
 class MACD:
     macd=[]
@@ -24,7 +33,6 @@ class MACD:
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
-        self.showMACDDiagram()
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -67,4 +75,6 @@ if __name__ == '__main__':
     currency = Currency("jen_japonski")
     date, course=currency.createData()
     macd=MACD(course, date)
+    currency.showCurrencyDiagram()
+    macd.showMACDDiagram()
     
