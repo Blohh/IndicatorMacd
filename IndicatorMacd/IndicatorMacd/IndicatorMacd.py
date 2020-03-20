@@ -32,7 +32,7 @@ class MACD:
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
-        self.newCalculateBuySellSignals()
+        self.newCalculateBuySellSignals(0.0141, 0.154)
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -54,7 +54,16 @@ class MACD:
     def calculateSIGNAL(self):
         for i in range(35, len(self.macd)):
             self.signal.append(self.calculateEMA(self.macd, i, 9))
+    def maximalMACD_SIGNALDifference(self):
+        tmp_macd=self.macd[35::]
+        max = 0
+        for i in range(1, len(tmp_macd)):
+            if  abs(tmp_macd[i]) - abs(self.signal[i]) > max:
+                max = abs(tmp_macd[i] - self.signal[i])
+        return max
+            
     def calculateBuySellSignals(self):
+        self.buy_sell_signal=[]
         tmp_macd=self.macd[35::]
         for i in range(1, len(tmp_macd)):
             if tmp_macd[i-1]<self.signal[i-1] and tmp_macd[i] > self.signal[i]:
@@ -63,14 +72,16 @@ class MACD:
                 self.buy_sell_signal.append("sell")
             else:
                 self.buy_sell_signal.append("noaction")
-    def newCalculateBuySellSignals(self):
+    def newCalculateBuySellSignals(self, alpha, betha):
+        self.buy_sell_signal=[]
+        max = self.maximalMACD_SIGNALDifference()
         tmp_macd=self.macd[35::]
         deposited = False;
         for i in range(1, len(tmp_macd)):
-            if  abs(tmp_macd[i] - self.signal[i]) >= 10 and deposited == False:
+            if  abs(tmp_macd[i] - self.signal[i]) >= alpha*max and deposited == False:
                 self.buy_sell_signal.append("buy")
                 deposited = True
-            elif abs(tmp_macd[i] - self.signal[i])  < 3 and deposited == True:
+            elif abs(tmp_macd[i] - self.signal[i])  < betha*max and deposited == True:
                 deposited = False
                 self.buy_sell_signal.append("sell")
             else:
@@ -165,6 +176,63 @@ class Simulation:
                 print("Got "+str(cash)+" $")
         print("\nAt the end you have "+str(cash+round(deposited_cash*course[999], 2))+" $")
         print("You begin with "+str(starting_cash)+" $")
+    def findgoodParameters(self, macd, date, course, starting_cash):
+        max_cash=0
+        good_alpha=0
+        good_betha=0
+        for alp in range(1, 999):
+            for bet in range(1, 999):
+                alpha=alp/10.0
+                betha=bet/10.0
+                macd.newCalculateBuySellSignals(alpha, betha)
+                buy_sell_signal=macd.getBuySellSignal()
+                cash=starting_cash
+                deposited_cash=0
+                end_cash=0
+                tmp_date=date[35::]
+                for i in range(len(buy_sell_signal)):
+                    if(buy_sell_signal[i]=="buy"):
+                        deposited_cash=round(cash/course[i], 2)
+                        cash=0
+                    elif(buy_sell_signal[i]=="sell"):
+                        cash+=round(deposited_cash*course[i], 2)
+                        deposited_cash=0
+                end_cash=(cash+round(deposited_cash*course[999], 2))
+                if end_cash > max_cash:
+                    max_cash=end_cash
+                    good_alpha=alpha
+                    good_betha=betha
+        print("good alpha: "+str(best_alpha)+" good betha: "+str(best_betha)+"best gotten cash"+str(max_cash))
+        return good_alpha, good_betha
+    def findBestParameters(self, macd, date, course, starting_cash, good_alpha, good_betha):
+        max_cash=0
+        best_alpha=good_alpha
+        good_alpha=0
+        for alp in range(1, 999):
+            for bet in range(1, 999):
+                print(str(alp)+" "+str(bet))
+                alpha=good_alpha+alp/10000.0
+                betha=good_betha+bet/10000.0
+                macd.newCalculateBuySellSignals(alpha, betha)
+                buy_sell_signal=macd.getBuySellSignal()
+                cash=starting_cash
+                deposited_cash=0
+                end_cash=0
+                tmp_date=date[35::]
+                for i in range(len(buy_sell_signal)):
+                    if(buy_sell_signal[i]=="buy"):
+                        deposited_cash=round(cash/course[i], 2)
+                        cash=0
+                    elif(buy_sell_signal[i]=="sell"):
+                        cash+=round(deposited_cash*course[i], 2)
+                        deposited_cash=0
+                end_cash=(cash+round(deposited_cash*course[999], 2))
+                if end_cash > max_cash:
+                    max_cash=end_cash
+                    best_alpha=alpha
+                    best_betha=betha
+        print("best alpha: "+str(best_alpha)+" best betha: "+str(best_betha)+"best gotten cash"+str(max_cash))
+        return good_alpha, good_betha
 
 
 
@@ -175,4 +243,6 @@ if __name__ == '__main__':
     macd=MACD(course, date)
     Diagram.showMACDAndCurrency(Diagram(), currency.getDate(), macd.getMACD(), macd.getSignal(), currency.getCourse(), currency.getName())
     Simulation.simulate(Simulation(), currency.getDate(), currency.getCourse(), macd.getBuySellSignal(), 1000)
+   
+
     
