@@ -32,7 +32,7 @@ class MACD:
     def __init__(self, course, date):
         self.calculateMACD(course)
         self.calculateSIGNAL()
-        self.calculateBuySellSignals()
+        self.newCalculateBuySellSignals()
     def calculateMACD(self, course):
         for i in range(len(course)):
             if i>=26:
@@ -60,6 +60,18 @@ class MACD:
             if tmp_macd[i-1]<self.signal[i-1] and tmp_macd[i] > self.signal[i]:
                 self.buy_sell_signal.append("buy")
             elif tmp_macd[i-1]>self.signal[i-1] and tmp_macd[i] < self.signal[i]:
+                self.buy_sell_signal.append("sell")
+            else:
+                self.buy_sell_signal.append("noaction")
+    def newCalculateBuySellSignals(self):
+        tmp_macd=self.macd[35::]
+        deposited = False;
+        for i in range(1, len(tmp_macd)):
+            if  abs(tmp_macd[i] - self.signal[i]) >= 10 and deposited == False:
+                self.buy_sell_signal.append("buy")
+                deposited = True
+            elif abs(tmp_macd[i] - self.signal[i])  < 3 and deposited == True:
+                deposited = False
                 self.buy_sell_signal.append("sell")
             else:
                 self.buy_sell_signal.append("noaction")
