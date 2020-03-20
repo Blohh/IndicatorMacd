@@ -14,8 +14,8 @@ class Currency:
     def createData(self):
         filename="./data/"+str(self.name)+".csv"
         data=pd.read_csv(str(filename),delimiter=",")
-        self.course=list(data["Course"])
-        self.date=list(data["Date"])
+        self.course=list(data["price(USD)"])
+        self.date=list(data["date"])
         self.course.reverse()
         self.date.reverse()
         return self.date, self.course
@@ -158,10 +158,9 @@ class Simulation:
 
 
 if __name__ == '__main__':
-    currency = Currency("jen_japonski")
+    currency = Currency("bitcoin")
     date, course=currency.createData()
     macd=MACD(course, date)
     Diagram.showMACDAndCurrency(Diagram(), currency.getDate(), macd.getMACD(), macd.getSignal(), currency.getCourse(), currency.getName())
-    Diagram.showDiagramFromXToY(Diagram(), currency.getDate(), macd.getMACD(), macd.getSignal(), currency.getCourse(), currency.getName(), 0, 10)
     Simulation.simulate(Simulation(), currency.getDate(), currency.getCourse(), macd.getBuySellSignal(), 1000)
     
