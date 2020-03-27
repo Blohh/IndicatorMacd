@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>10a94672-163a-4909-9fac-1c16aef21bc9</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>IndicatorMacd.py</StartupFile>
+    <StartupFile>main.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,7 +22,19 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="IndicatorMacd.py" />
+    <Compile Include="Currency.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Diagram.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="main.py" />
+    <Compile Include="MACD.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Simulation.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="CondaEnv|CondaEnv|env2" />
